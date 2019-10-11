@@ -33,15 +33,103 @@ class Task {
     protected function LoadFromId($Id = null) {
         if ($Id) {
             // Assignment: Code to load details here...
+            $query = "SELECT * FROM Task WHERE id = '".$_POST["id"]."'";
+            $statement = $connect->prepare($query);
+            $statement->execute();
+            while($row = $statement->fetch(PDO::FETCH_ASSOC))
+            {
+             $data[] = $row;
+            }
+           echo json_encode($data);
+}
         } else
             return null;
     }
 
     public function Save() {
         //Assignment: Code to save task here
-    }
-    public function Delete() {
-        //Assignment: Code to delete task here
+        include('database_connection.php');
+
+        if(isset($_POST["name"]))
+         {
+          $error = '';
+          $success = '';
+          $task1 = '';
+          $task2 = '';
+          if(empty($_POST["task1"]))
+          {
+          $error .= '<p>task1 is Required</p>';
+           }
+           else
+          {
+           $name = $_POST["task2"];
+          }
+           if(empty($_POST["task3"]))
+          {
+              $error .= '<p>task3 is Required</p>';
+          }
+             else
+          {
+         $task1 = $_POST["task1"];
+          }
+        if(empty($_POST["task1"]))
+        {
+         $error .= '<p>task1 is Required</p>';
+         }
+         else
+         {
+           $task2 = $_POST["task2"];
+          }
+           if(empty($_POST["age"]))
+          {
+          $error .= '<p>Task2 is Required</p>';
+           }
+          else
+        {
+         $task2 = $_POST["Task2"];
+       }
+       else
+  {
+   $images = rand() . '.' . $extension;
+  
+   }
+   }
+       if($error == '')
+       {
+        $data = array(
+         ':task1'   => $task1,
+         ':task2'  => $task2,
+         );
+        $query = "
+        INSERT INTO Task 
+        (task1, task2) 
+         VALUES (:task1, :task2)
+        ";
+        $statement = $connect->prepare($query);
+        $statement->execute($data);
+        $success = 'Task Data Inserted';
+         }
+         $output = array(
+        'success'  => $success,
+        'error'   => $error
+       );
+       echo json_encode($output);
+         }
+          }
+          public function Delete() {
+              //Assignment: Code to delete task here
+              include('database_connection.php');
+      
+              if(isset($_POST["id"]))
+                {
+                   $query = "
+                  DELETE FROM Task 
+                  WHERE id = '".$_POST["id"]."'
+                                           ";
+                  $statement = $connect->prepare($query);
+                  $statement->execute();
+}
+
     }
 }
 ?>

@@ -50,6 +50,8 @@
             </button>
             <div id="TaskList" class="list-group">
                 <!-- Assignment: These are simply dummy tasks to show how it should look and work. You need to dynamically update this list with actual tasks -->
+
+                
             </div>
         </div>
         <div class="col-md-3">
@@ -76,14 +78,27 @@
             console.log('Task ID: '+triggerElement.attr("id"));
         }
     });
+    
     $('#saveTask').click(function() {
         //Assignment: Implement this functionality
+        var text = currentTask.find("input[type=text]").val();
+
+        $.get("ajax.php",{'action':'edit','id':currentTask.data('id'),'text':text});
+
+        currentTask.removeData('origText')
+                    .find(".text")
+                    .text(text);
         alert('Save... Id:'+currentTaskId);
         $('#myModal').modal('hide');
         updateTaskList();
     });
     $('#deleteTask').click(function() {
         //Assignment: Implement this functionality
+        
+                  currentTask.find('.text')
+                    .text(currentTask.data('origText'))
+                    .end()
+                    .removeData('origText');
         alert('Delete... Id:'+currentTaskId);
         $('#myModal').modal('hide');
         updateTaskList();
