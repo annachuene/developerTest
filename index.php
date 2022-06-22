@@ -1,113 +1,99 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Basic Task Manager</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js"></script>
+    <style type="text/css">
+		.wrapper{
+            width: 650px;
+            margin: 0 auto;
+        }
+        .page-header h2{
+            margin-top: 0;
+        }
+		
+        table tr td:last-child a{
+            margin-right: 15px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();   
+        });
+    </script>
 </head>
 <body>
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-            </div>
-            <div class="modal-body">
-                <form action="update_task.php" method="post">
-                    <div class="row">
-                        <div class="col-md-12" style="margin-bottom: 5px;;">
-                            <input id="InputTaskName" type="text" placeholder="Task Name" class="form-control">
-                        </div>
-                        <div class="col-md-12">
-                            <textarea id="InputTaskDescription" placeholder="Description" class="form-control"></textarea>
-                        </div>
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="page-header clearfix">
+                        <h2 class="pull-left">Employees Details</h2>
+                        <a href="create.php" class="btn btn-primary pull-right">Add New Employee</a>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id="deleteTask" type="button" class="btn btn-danger">Delete Task</button>
-                <button id="saveTask" type="button" class="btn btn-primary">Save changes</button>
-            </div>
+                    <?php
+                    // Include config file
+                    require_once "config.php";
+                    
+                    // Attempt select query execution
+                    $sql = "SELECT * FROM employee_record";
+                    if($result = mysqli_query($conn, $sql)){
+                        if(mysqli_num_rows($result) > 0){
+                            echo "<table class='table table-bordered table-striped table-hover '>";
+                                echo "<thead>";
+                                    echo "<tr>";
+                                        echo "<th>#</th>";
+                                        echo "<th>First Name</th>";
+                                        echo "<th>Address</th>";
+                                        echo "<th>Contact Number</th>";
+										echo "<th>Email Address</th>";
+										echo "<th>Date of Birth</th>";
+										echo "<th>Street Address</th>";
+                                        echo "<th>Action</th>";
+                                    echo "</tr>";
+                                echo "</thead>";
+                                echo "<tbody>";
+                                while($row = mysqli_fetch_array($result)){
+                                    echo "<tr>";
+                                        echo "<td>" . $row['id'] . "</td>";
+                                        echo "<td>" . $row['name'] . "</td>";
+                                        echo "<td>" . $row['address'] . "</td>";
+                                        echo "<td>" . $row['marks'] . "</td>";
+										echo "<td>" . $row['email'] . "</td>";
+										echo "<td>" . $row['birthdate'] . "</td>";
+										echo "<td>" . $row['streetaddress'] . "</td>";
+                                        echo "<td>";
+                                            echo "<a href='read.php?id=". $row['id'] ."' title='View Record' data-toggle='tooltip'><span class='glyphicon glyphicon-eye-open'></span></a>";
+                                            echo "<a href='update.php?id=". $row['id'] ."' title='Update Record' data-toggle='tooltip'><span class='glyphicon glyphicon-pencil'></span></a>";
+                                            echo "<a href='delete.php?id=". $row['id'] ."' title='Delete Record' data-toggle='tooltip'><span class='glyphicon glyphicon-trash'></span></a>";
+                                        echo "</td>";
+                                    echo "</tr>";
+                                }
+                                echo "</tbody>";                            
+                            echo "</table>";
+                            // Free result set
+                            mysqli_free_result($result);
+                        } else{
+                            echo "<p class='lead'><em>No records were found.</em></p>";
+                        }
+                    } else{
+                        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+                    }
+					
+                    // Close connection
+                    mysqli_close($conn);
+                    ?>
+					<form  method="post" action="search1.php?go"  id="searchform"> 
+						<input  type="text" name="name"> 
+						<input  type="submit" name="submit" value="Search"> 
+					</form> 
+					
+                </div>
+            </div>        
         </div>
     </div>
-</div>
-
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3">
-
-        </div>
-        <div class="col-md-6">
-            <h2 class="page-header">Task List</h2>
-            <!-- Button trigger modal -->
-            <button id="newTask" type="button" class="btn btn-primary btn-lg" style="width:100%;margin-bottom: 5px;" data-toggle="modal" data-target="#myModal">
-                Add Task
-            </button>
-            <div id="TaskList" class="list-group">
-                <!-- Assignment: These are simply dummy tasks to show how it should look and work. You need to dynamically update this list with actual tasks -->
-
-                
-            </div>
-        </div>
-        <div class="col-md-3">
-
-        </div>
-    </div>
-</div>
 </body>
-<script type="text/javascript" src="assets/js/jquery-1.12.3.min.js"></script>
-<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-    var currentTaskId = -1;
-    $('#myModal').on('show.bs.modal', function (event) {
-        var triggerElement = $(event.relatedTarget); // Element that triggered the modal
-        var modal = $(this);
-        if (triggerElement.attr("id") == 'newTask') {
-            modal.find('.modal-title').text('New Task');
-            $('#deleteTask').hide();
-            currentTaskId = -1;
-        } else {
-            modal.find('.modal-title').text('Task details');
-            $('#deleteTask').show();
-            currentTaskId = triggerElement.attr("id");
-            console.log('Task ID: '+triggerElement.attr("id"));
-        }
-    });
-    
-    $('#saveTask').click(function() {
-        //Assignment: Implement this functionality
-        var text = currentTask.find("input[type=text]").val();
-
-        $.get("ajax.php",{'action':'edit','id':currentTask.data('id'),'text':text});
-
-        currentTask.removeData('origText')
-                    .find(".text")
-                    .text(text);
-        alert('Save... Id:'+currentTaskId);
-        $('#myModal').modal('hide');
-        updateTaskList();
-    });
-    $('#deleteTask').click(function() {
-        //Assignment: Implement this functionality
-        
-                  currentTask.find('.text')
-                    .text(currentTask.data('origText'))
-                    .end()
-                    .removeData('origText');
-        alert('Delete... Id:'+currentTaskId);
-        $('#myModal').modal('hide');
-        updateTaskList();
-    });
-    function updateTaskList() {
-        $.post("list_tasks.php", function( data ) {
-            $( "#TaskList" ).html( data );
-        });
-    }
-    updateTaskList();
-</script>
 </html>

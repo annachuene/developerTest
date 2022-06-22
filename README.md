@@ -1,26 +1,5 @@
-# Development Exercise
-This exercise evaluates a basic understanding of PHP, jQuery, HTML &amp; CSS. It makes use of the bootstrap UI framework along with the jquery javascript library. All server actions are done in PHP.
-
-### Assignment
-You will be creating a basic PHP web app that allows a user to create and modify tasks in a task list type of app. Tasks will be stored in a file as a json encoded string (for the purposes of this exercise).
-The final result should be a 1 page app that displays a list of tasks and allows the user to click on a task to edit it in a modal (reference bootstrap modals). The user should also be able to create a new task from scratch as well as delete existing tasks.
-* You will need to implement the jquery and html code on the frontend to display the task information
-* You will need to implement the jquery code on the frontend that sends the task information to the server
-* You will need to implement a PHP class that will be able to handle the modification of the task object
-* You will need to implement a PHP script that receives a POST with the object information and then either updates, creates or deletes the task object
-
-To start, fork this repo and continue within the existing code to complete the assignment.
-
-Key functions that will be required are:
-
-In PHP:
-* json_encode();
-* json_decode();
-
-In jQuery:
-* $.post();
-* Functions to update html elements on the page
-
-Prerequisites:
-* PHP and Apache running on your local machine. For more information on how to set this up, visit https://www.mamp.info/en/
-
+![data_search](https://user-images.githubusercontent.com/35237091/74930009-b9acd180-5402-11ea-858a-a09e6063f73d.JPG)
+To perform the CRUD operation first of all download all the files.
+After downloading is complete, first of all imort the student_record.sql file in your database.
+Then save rest of the file in either www folder in wamp or htdocs folder in xampp and change the required values accordingly.
+Now you are all set to perform the operation through localhost.
